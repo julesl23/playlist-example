@@ -165,7 +165,7 @@ const Index = () => {
         console.log('addresses: ', addresses);
         await window.ethereum.request({
           method: 'snap_manageState',
-          params: { operation: 'update', newState: { hello: 'world' } },
+          params: { operation: 'update', newState: { addresses } },
         });
       }
     } catch (e) {
