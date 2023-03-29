@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ethereum Addresses</title>
+  <style>
+    #list-container {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="list-container">
+    <ul id="address-list"></ul>
+  </div>
+  <div>
+    <input type="text" id="add-input" placeholder="Enter Ethereum address">
+    <button id="add-button">Add</button>
+  </div>
+  <div>
+    <input type="text" id="remove-input" placeholder="Enter Ethereum address">
+    <button id="remove-button">Remove</button>
+  </div>
+
+  <script>
+    const addressList = document.getElementById('address-list');
+    const addButton = document.getElementById('add-button');
+    const addInput = document.getElementById('add-input');
+    const removeButton = document.getElementById('remove-button');
+    const removeInput = document.getElementById('remove-input');
+
+    addButton.addEventListener('click', () => {
+      const address = addInput.value.trim();
+      if (address) {
+        const listItem = document.createElement('li');
+        listItem.textContent = address;
+        addressList.appendChild(listItem);
+        addInput.value = '';
+      }
+    });
+
+    removeButton.addEventListener('click', () => {
+      const addressToRemove = removeInput.value.trim();
+      if (addressToRemove) {
+        const listItems = addressList.getElementsByTagName('li');
+        for (let i = 0; i < listItems.length; i++) {
+          if (listItems[i].textContent === addressToRemove) {
+            addressList.removeChild(listItems[i]);
+            break;
+          }
+        }
+        removeInput.value = '';
+      }
+    });
+  </script>
+</body>
+
+</html>
