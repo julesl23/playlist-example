@@ -3,10 +3,14 @@ import { useContext, useState, useEffect } from 'react';
 //import { snap } from '../utils';
 import styled from 'styled-components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
+import { defaultSnapOrigin } from '../config';
+
 import {
   connectSnap,
   getSnap,
   sendHello,
+  saveState,
+  loadState,
   shouldDisplayReconnectButton,
 } from '../utils';
 import {
@@ -147,45 +151,13 @@ const Index = () => {
   };
 
   const handleSaveAddresses = async () => {
-    try {
-      const permissions = await window.ethereum.request({
-        method: 'wallet_requestPermissions',
-        params: [
-          {
-            snap_manageState: {},
-          },
-        ],
-      });
-      const accountsPermission = permissions.find(
-        (permission) => permission.parentCapability === 'snap_manageState',
-      );
-
-      if (accountsPermission) {
-        console.log('permission granted');
-        console.log('addresses: ', addresses);
-        await window.ethereum.request({
-          method: 'snap_manageState',
-          params: { operation: 'update', newState: { addresses } },
-        });
-      }
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
-    }
+    await saveState(addresses);
   };
 
   const handleLoadAddresses = async () => {
-    try {
-      const loadedAddresses = await window.ethereum.request({
-        method: 'snap_manageState',
-        params: { operation: 'get' },
-      });
-
-      setAddresses(loadedAddresses.addresses);
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
-    }
+    const state = await loadState();
+    console.log('handleLoadAddresses: ', state);
+    setAddresses(state.addresses.state);
   };
 
   const handleConnectClick = async () => {
